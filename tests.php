@@ -15,6 +15,17 @@ if ( $db->connect_error ) {
 $db->query( "SET GLOBAL sql_mode = 'NO_ENGINE_SUBSTITUTION'" );
 
 
+echo "\n***** First Test: *****\n";
+echo "> New TSA index immediately after create table\n";
+echo "\n";
+
+drop_table( $db );
+run_sql_file( $db, 'create-table.sql' );
+run_sql_file( $db, 'tsa-index.sql' );
+run_sql_file( $db, 'wp-posts-data.sql' );
+
+
+
 
 //
 // *****
