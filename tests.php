@@ -39,7 +39,7 @@ run_explain_count( $db, $argv );
 echo "\n";
 
 echo "\n***** Test: 3 *****\n";
-echo "> New TSA index immediately after create table, then analyze\, before insert\n";
+echo "> New TSA index immediately after create table, then analyze, before insert\n";
 echo "\n";
 
 drop_table( $db );
