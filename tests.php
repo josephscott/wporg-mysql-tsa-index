@@ -70,6 +70,7 @@ echo "\n\n";
 //
 
 function drop_table( $db ) {
+	echo "dropping table: wp_posts\n";
 	$sql = "DROP TABLE IF EXISTS `wp_posts`";
 	$db->query( $sql );
 }
