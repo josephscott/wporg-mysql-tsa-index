@@ -12,6 +12,16 @@ if ( $db->connect_error ) {
 	exit( 1 );
 }
 
+$db->query( "SET GLOBAL sql_mode = 'NO_ENGINE_SUBSTITUTION'" );
+
+
+
+//
+// *****
+// Helper Functions
+// *****
+//
+
 function drop_table( $db ) {
 	$sql = "DROP TABLE IF EXISTS `wp_posts`";
 	$db->query( $sql );
