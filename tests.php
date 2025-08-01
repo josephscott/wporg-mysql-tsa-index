@@ -25,7 +25,7 @@ run_sql_file( $db, 'create-table.sql' );
 run_sql_file( $db, 'autoinc.sql' );
 run_sql_file( $db, 'tsa-index.sql' );
 run_sql_file( $db, 'wp-posts-data.sql' );
-
+run_explain_count( $db );
 
 
 
@@ -55,5 +55,6 @@ function run_explain_count( $db ) {
 
 	$result = $db->query( $sql );
 	$row = $result->fetch_assoc();
-	return $row;
+
+	print_r( $row );
 }
