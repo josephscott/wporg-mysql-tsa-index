@@ -22,16 +22,10 @@ CREATE TABLE `wp_posts` (
   `menu_order` int NOT NULL DEFAULT '0',
   `post_type` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'post',
   `post_mime_type` varchar(100) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
-  `comment_count` bigint NOT NULL DEFAULT '0'
+  `comment_count` bigint NOT NULL DEFAULT '0',
+  PRIMARY KEY  (ID),
+  KEY post_name (post_name(191)),
+  KEY type_status_date (post_type,post_status,post_date,ID),
+  KEY post_parent (post_parent),
+  KEY post_author (post_author)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
-ALTER TABLE `wp_posts`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `post_name` (`post_name`(191)),
-  ADD KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`ID`),
-  ADD KEY `post_parent` (`post_parent`),
-  ADD KEY `post_author` (`post_author`);
-
-ALTER TABLE `wp_posts`
-  MODIFY `ID` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=516815;
-COMMIT;
