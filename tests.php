@@ -46,6 +46,21 @@ echo "\n";
 
 //
 
+echo "\n***** Test: 2b *****\n";
+echo "> New TSA index immediately after create table, before insert (alt data set)\n";
+echo "\n";
+
+show_mysql_version( $db );
+drop_table( $db );
+run_sql_file( $db, 'create-table.sql' );
+run_sql_file( $db, 'autoinc.sql' );
+run_sql_file( $db, 'tsa-index.sql' );
+run_sql_file_each_line( $db, 'wp-posts-data-alt.sql' );
+run_explain_count( $db, $argv );
+echo "\n";
+
+//
+
 echo "\n***** Test: 3 *****\n";
 echo "> New TSA index immediately after create table, then analyze, before insert\n";
 echo "\n";
@@ -97,6 +112,19 @@ function run_sql_file( $db, $sql_file ) {
 	echo "running: {$sql_file}\n";
 	$sql = file_get_contents( $sql_file );
 	$db->query( $sql );
+}
+
+function run_sql_file_each_line( $db, $sql_file ) {
+	echo "running: {$sql_file}\n";
+	$sql = file_get_contents( $sql_file );
+	$lines = explode( "\n", $sql );
+	foreach ( $lines as $line ) {
+		$line = trim( $line );
+		if ( empty( $line ) || substr( $line, 0, 2 ) === '--' ) {
+			continue;
+		}
+		$db->query( $line );
+	}
 }
 
 function run_explain_count( $db, $argv ) {
