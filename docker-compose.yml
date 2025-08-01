@@ -1,7 +1,7 @@
 services:
   mysql:
     image: mysql:8.0.42
-    container_name: mysql_test
+    container_name: mysql-test-wporg-tsa-index
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
