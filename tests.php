@@ -23,8 +23,8 @@ drop_table( $db );
 run_sql_file( $db, 'create-table.sql' );
 run_sql_file( $db, 'autoinc.sql' );
 run_sql_file( $db, 'wp-posts-data.sql' );
-run_explain_count( $db );
-echo "\n\n";
+run_explain_count( $db, $argv );
+echo "\n";
 
 echo "\n***** Test: 2 *****\n";
 echo "> New TSA index immediately after create table, before insert\n";
@@ -35,8 +35,8 @@ run_sql_file( $db, 'create-table.sql' );
 run_sql_file( $db, 'autoinc.sql' );
 run_sql_file( $db, 'tsa-index.sql' );
 run_sql_file( $db, 'wp-posts-data.sql' );
-run_explain_count( $db );
-echo "\n\n";
+run_explain_count( $db, $argv );
+echo "\n";
 
 echo "\n***** Test: 3 *****\n";
 echo "> New TSA index immediately after create table, then analyze\, before insert\n";
@@ -48,8 +48,8 @@ run_sql_file( $db, 'autoinc.sql' );
 run_sql_file( $db, 'tsa-index.sql' );
 run_sql_file( $db, 'analyze-wp-posts.sql' );
 run_sql_file( $db, 'wp-posts-data.sql' );
-run_explain_count( $db );
-echo "\n\n";
+run_explain_count( $db, $argv );
+echo "\n";
 
 echo "\n***** Test: 4 *****\n";
 echo "> New TSA index after inserting data\n";
@@ -60,8 +60,8 @@ run_sql_file( $db, 'create-table.sql' );
 run_sql_file( $db, 'autoinc.sql' );
 run_sql_file( $db, 'wp-posts-data.sql' );
 run_sql_file( $db, 'tsa-index.sql' );
-run_explain_count( $db );
-echo "\n\n";
+run_explain_count( $db, $argv );
+echo "\n";
 
 //
 // *****
@@ -81,7 +81,7 @@ function run_sql_file( $db, $sql_file ) {
 	$db->query( $sql );
 }
 
-function run_explain_count( $db ) {
+function run_explain_count( $db, $argv ) {
 	$sql = "EXPLAIN SELECT COUNT( 1 )
             FROM wp_posts
             WHERE post_type = 'post'
@@ -91,5 +91,9 @@ function run_explain_count( $db ) {
 	$result = $db->query( $sql );
 	$row = $result->fetch_assoc();
 
-	print_r( $row );
+	echo "Using index: {$row['key']}\n";
+
+	if ( isset( $argv[1] ) && $argv[1] === '-v' ) {
+		print_r( $row );
+	}
 }
