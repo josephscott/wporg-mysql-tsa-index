@@ -26,6 +26,20 @@ run_sql_file( $db, 'autoinc.sql' );
 run_sql_file( $db, 'tsa-index.sql' );
 run_sql_file( $db, 'wp-posts-data.sql' );
 run_explain_count( $db );
+echo "\n\n";
+
+echo "\n***** Second Test: *****\n";
+echo "> New TSA index after inserting data\n";
+echo "\n";
+
+drop_table( $db );
+run_sql_file( $db, 'create-table.sql' );
+run_sql_file( $db, 'autoinc.sql' );
+run_sql_file( $db, 'wp-posts-data.sql' );
+run_sql_file( $db, 'tsa-index.sql' );
+run_explain_count( $db );
+echo "\n\n";
+
 
 
 
