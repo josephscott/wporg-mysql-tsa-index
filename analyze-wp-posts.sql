@@ -1,1 +1,1 @@
-ANALYZE `wp_posts`;
+ANALYZE TABLE `wp_posts`;
