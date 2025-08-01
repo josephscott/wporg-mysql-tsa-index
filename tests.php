@@ -11,3 +11,13 @@ if ( $db->connect_error ) {
 	echo "Connection error: " . $db->connect_error . "\n";
 	exit( 1 );
 }
+
+function drop_table( $db ) {
+	$sql = "DROP TABLE IF EXISTS `wp_posts`";
+	$db->query( $sql );
+}
+
+function run_sql_file( $db, $sql_file ) {
+	$sql = file_get_contents( $sql_file );
+	$db->query( $sql );
+}
