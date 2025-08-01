@@ -12,7 +12,8 @@ if ( $db->connect_error ) {
 	exit( 1 );
 }
 
-$db->query( "SET GLOBAL sql_mode = 'NO_ENGINE_SUBSTITUTION'" );
+$db->query( "SET SESSION sql_mode = REPLACE(@@sql_mode, 'NO_ZERO_DATE', '')" );
+$db->query( "SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION'" );
 
 
 echo "\n***** First Test: *****\n";
@@ -21,6 +22,7 @@ echo "\n";
 
 drop_table( $db );
 run_sql_file( $db, 'create-table.sql' );
+run_sql_file( $db, 'autoinc.sql' );
 run_sql_file( $db, 'tsa-index.sql' );
 run_sql_file( $db, 'wp-posts-data.sql' );
 
@@ -39,6 +41,19 @@ function drop_table( $db ) {
 }
 
 function run_sql_file( $db, $sql_file ) {
+	echo "running: {$sql_file}\n";
 	$sql = file_get_contents( $sql_file );
 	$db->query( $sql );
+}
+
+function run_explain_count( $db ) {
+	$sql = "EXPLAIN SELECT COUNT( 1 )
+            FROM wp_posts
+            WHERE post_type = 'post'
+            AND post_status NOT IN ( 'trash','auto-draft','inherit','request-pending','request-confirmed','request-failed','request-completed' )
+            AND post_author = 1";
+
+	$result = $db->query( $sql );
+	$row = $result->fetch_assoc();
+	return $row;
 }
