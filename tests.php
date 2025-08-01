@@ -15,10 +15,13 @@ if ( $db->connect_error ) {
 $db->query( "SET SESSION sql_mode = REPLACE(@@sql_mode, 'NO_ZERO_DATE', '')" );
 $db->query( "SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION'" );
 
+//
+
 echo "\n***** Test: 1 *****\n";
 echo "> NO TSA index\n";
 echo "\n";
 
+show_mysql_version( $db );
 drop_table( $db );
 run_sql_file( $db, 'create-table.sql' );
 run_sql_file( $db, 'autoinc.sql' );
@@ -26,10 +29,13 @@ run_sql_file( $db, 'wp-posts-data.sql' );
 run_explain_count( $db, $argv );
 echo "\n";
 
+//
+
 echo "\n***** Test: 2 *****\n";
 echo "> New TSA index immediately after create table, before insert\n";
 echo "\n";
 
+show_mysql_version( $db );
 drop_table( $db );
 run_sql_file( $db, 'create-table.sql' );
 run_sql_file( $db, 'autoinc.sql' );
@@ -38,10 +44,13 @@ run_sql_file( $db, 'wp-posts-data.sql' );
 run_explain_count( $db, $argv );
 echo "\n";
 
+//
+
 echo "\n***** Test: 3 *****\n";
 echo "> New TSA index immediately after create table, then analyze, before insert\n";
 echo "\n";
 
+show_mysql_version( $db );
 drop_table( $db );
 run_sql_file( $db, 'create-table.sql' );
 run_sql_file( $db, 'autoinc.sql' );
@@ -51,10 +60,13 @@ run_sql_file( $db, 'wp-posts-data.sql' );
 run_explain_count( $db, $argv );
 echo "\n";
 
+//
+
 echo "\n***** Test: 4 *****\n";
 echo "> New TSA index after inserting data\n";
 echo "\n";
 
+show_mysql_version( $db );
 drop_table( $db );
 run_sql_file( $db, 'create-table.sql' );
 run_sql_file( $db, 'autoinc.sql' );
@@ -68,6 +80,12 @@ echo "\n";
 // Helper Functions
 // *****
 //
+
+function show_mysql_version( $db ) {
+	$result = $db->query( "SELECT VERSION()" );
+	$row = $result->fetch_assoc();
+	echo "MySQL version: {$row['VERSION()']}\n";
+}
 
 function drop_table( $db ) {
 	echo "dropping table: wp_posts\n";
