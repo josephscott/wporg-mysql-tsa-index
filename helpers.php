@@ -1,4 +1,5 @@
 <?php
+
 function get_db_connection() {
 	$db = new mysqli(
 		'127.0.0.1',
@@ -41,15 +42,19 @@ function run_sql_file_each_line( $db, $sql_file ) {
 	}
 }
 
-function run_explain_count( $db ) {
-	$sql = "EXPLAIN SELECT COUNT( 1 )
+const QUERY = "SELECT COUNT( 1 )
             FROM wp_posts
             WHERE post_type = 'post'
             AND post_status NOT IN ( 'trash','auto-draft','inherit','request-pending','request-confirmed','request-failed','request-completed' )
             AND post_author = 1";
 
+function run_count_query( $db ) {
+	$sql =
+		// "EXPLAIN " .
+		QUERY;
+
 	$result = $db->query( $sql );
 	$row = $result->fetch_assoc();
 
-	return $row['key'];
+	return $row;
 }

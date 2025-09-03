@@ -2,7 +2,7 @@
 require_once 'helpers.php';
 
 $db = get_db_connection();
-$index_used = run_explain_count( $db );
+$result = run_count_query( $db );
 $db->close();
 
-echo $index_used;
+var_dump( $result );
