@@ -2,7 +2,20 @@
 <?php
 ini_set( 'strict_types', '1' );
 
-const ITERATIONS = 1_000;
+const ITERATIONS = 10_000;
+
+/* $db = new mysqli( */
+/* 	'127.0.0.1', */
+/* 	'test_user', */
+/* 	'test_pass', */
+/* 	'test_db', */
+/* 	6330 */
+/* ); */
+/* $db->query( "SET SESSION sql_mode = REPLACE(@@sql_mode, 'NO_ZERO_DATE', '')" ); */
+/* $db->query( "SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION'" ); */
+/* drop_table( $db ); */
+/* test1_setup($db); */
+/* die(); */
 
 function test1_setup($db) {
 	echo "\n***** Test: 1 *****\n";
@@ -95,13 +108,16 @@ function time_tests( array $tests ) {
 		show_versions( $db );
 
 
-		/*
 		foreach ( $tests as $setup ) {
-			$res = $db->query( "SELECT BENCHMARK( 1000000, (" . SELECT_SQL . ") )" )->fetch_column(0);
-			echo $res;
+			drop_table( $db );
+			$setup( $db );
+			$start = -hrtime( true );
+			$db->query( "SELECT BENCHMARK( ".ITERATIONS.", (" . SELECT_SQL . ") )" );
+			$duration = $start + hrtime( true );
+			echo "Duration: " . number_format( $duration / 1e6, 2 ) . " ms\n";
 		}
-		*/
 
+		/*
 		foreach ( $tests as $setup ) {
 			$i = ITERATIONS;
 			drop_table( $db );
@@ -113,6 +129,7 @@ function time_tests( array $tests ) {
 			$duration = $start + hrtime( true );
 			echo "Duration: " . number_format( $duration / 1e6, 2 ) . " ms\n";
 		}
+		*/
 	} finally {
 		drop_table( $db );
 		$db->close();
