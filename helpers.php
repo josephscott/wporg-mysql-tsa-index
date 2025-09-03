@@ -1,4 +1,5 @@
 <?php
+ini_set('strict_types', 1);
 
 function get_db_connection() {
 	$db = new mysqli(
