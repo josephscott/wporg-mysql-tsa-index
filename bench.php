@@ -2,7 +2,7 @@
 <?php
 ini_set( 'strict_types', '1' );
 
-const ITERATIONS = 100_000;
+const ITERATIONS = 10_000;
 
 function test1_setup($db) {
 	echo "\n***** Test: 1 *****\n";
@@ -92,26 +92,36 @@ function time_tests( array $tests ) {
 	try {
 		$db->query( "SET SESSION sql_mode = REPLACE(@@sql_mode, 'NO_ZERO_DATE', '')" );
 		$db->query( "SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION'" );
-		show_mysql_version( $db );
+		show_versions( $db );
+
+
+		/*
+		foreach ( $tests as $setup ) {
+			$res = $db->query( "SELECT BENCHMARK( 1000000, (" . SELECT_SQL . ") )" )->fetch_column(0);
+			echo $res;
+		}
+		*/
 
 		foreach ( $tests as $setup ) {
 			$i = ITERATIONS;
 			drop_table( $db );
 			$setup( $db );
-			$start = microtime( true );
+			$start = -hrtime( true );
 			while ( $i-- ) {
 				run_select_count( $db );
 			}
-			$end = microtime( true );
-			$duration = $end - $start;
-			echo "Duration: " . number_format( $duration, 4 ) . " seconds\n";
+			$duration = $start + hrtime( true );
+			echo "Duration: " . number_format( $duration / 1e6, 2 ) . " ms\n";
 		}
 	} finally {
+		drop_table( $db );
 		$db->close();
 	}
 }
 
-function show_mysql_version( $db ) {
+function show_versions( $db ) {
+	echo "PHP version: " . PHP_VERSION . "\n";
+
 	$result = $db->query( "SELECT VERSION()" );
 	$row = $result->fetch_assoc();
 	echo "MySQL version: {$row['VERSION()']}\n";
@@ -142,17 +152,9 @@ function run_sql_file_each_line( $db, $sql_file ) {
 	}
 }
 
-const EXPLAIN_SQL = "EXPLAIN SELECT COUNT( 1 )
-            FROM wp_posts
-            WHERE post_type = 'post'
-            AND post_status NOT IN ( 'trash','auto-draft','inherit','request-pending','request-confirmed','request-failed','request-completed' )
-            AND post_author = 1";
+const EXPLAIN_SQL = "EXPLAIN SELECT COUNT( 1 ) FROM wp_posts WHERE post_type = 'post' AND post_status NOT IN ( 'trash','auto-draft','inherit','request-pending','request-confirmed','request-failed','request-completed' ) AND post_author = 1";
 
-const SELECT_SQL = "SELECT COUNT( 1 )
-            FROM wp_posts
-            WHERE post_type = 'post'
-            AND post_status NOT IN ( 'trash','auto-draft','inherit','request-pending','request-confirmed','request-failed','request-completed' )
-            AND post_author = 1";
+const SELECT_SQL = "SELECT COUNT( 1 ) FROM wp_posts WHERE post_type = 'post' AND post_status NOT IN ( 'trash','auto-draft','inherit','request-pending','request-confirmed','request-failed','request-completed' ) AND post_author = 1";
 
 function run_explain_count( $db ) {
 	$result = $db->query( EXPLAIN_SQL );
