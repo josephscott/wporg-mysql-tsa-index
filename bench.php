@@ -2,7 +2,7 @@
 <?php
 ini_set( 'strict_types', '1' );
 
-const ITERATIONS = 10_000;
+const ITERATIONS = 1_000;
 
 function test1_setup($db) {
 	echo "\n***** Test: 1 *****\n";
@@ -173,7 +173,7 @@ function run_select_count( $db ) {
 time_tests([
  	'test1_setup',
 	'test2_setup',
-	/* 'test2b_setup', */
+	'test2b_setup',
 	'test3_setup',
 	'test4_setup',
 ]);
