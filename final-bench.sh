@@ -5,7 +5,7 @@ set -o errexit
 
 hyperfine \
   --warmup 2 \
-  --min-runs 100 \
+  --min-runs 50 \
   --cleanup "php remove-index.php" \
   --command-name "No new index" \
   --prepare "php remove-index.php" \
@@ -15,6 +15,9 @@ hyperfine \
   "php bench-final.php" \
   --command-name "With TAS index" \
   --prepare "php add-tas-index.php" \
+  "php bench-final.php" \
+  --command-name "With TSD index" \
+  --prepare "php add-tsd-index.php" \
   "php bench-final.php" \
   --command-name "With ATS index" \
   --prepare "php add-ats-index.php" \

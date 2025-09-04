@@ -20,3 +20,5 @@ $db->query( "SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION'" );
 try { $db->query('DROP INDEX type_status_author on wp_posts'); } catch ( Exception $e ) {}
 try { $db->query('DROP INDEX type_author_status on wp_posts'); } catch ( Exception $e ) {}
 try { $db->query('DROP INDEX author_type_status on wp_posts'); } catch ( Exception $e ) {}
+try { $db->query('DROP INDEX type_status_post_date_gmt on wp_posts'); } catch ( Exception $e ) {}
+try { $db->query('DROP INDEX type_status_modified_date_gmt on wp_posts'); } catch ( Exception $e ) {}
